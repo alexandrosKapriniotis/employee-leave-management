@@ -1,0 +1,18 @@
+{
+    "name": "sim2a/employee-leave-management",
+    "description": "Employee leave management portal developed as part of a pre employment assignment. May the force be with me!",
+    "autoload": {
+        "psr-4": {
+            "app\\": "./"
+        }
+    },
+    "authors": [
+        {
+            "name": "alexandrosKapriniotis",
+            "email": "sim2ates@hotmail.com"
+        }
+    ],
+    "require": {
+        "vlucas/phpdotenv": "^5.5"
+    }
+}

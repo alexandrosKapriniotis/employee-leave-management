@@ -1,0 +1,4 @@
+#main-wrapper.auth[data-layout=vertical][data-header-position=fixed] .app-header
+{
+    width: 100%;
+}
