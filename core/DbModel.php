@@ -5,7 +5,7 @@ namespace app\core;
 abstract class DbModel extends Model
 {
 
-    abstract public function tableName(): string;
+    abstract public static function tableName(): string;
     public static function primaryKey(): string
     {
         return 'id';
@@ -17,7 +17,7 @@ abstract class DbModel extends Model
      */
     public function save(): bool
     {
-        $tableName  = $this->tableName();
+        $tableName  = static::tableName();
         $attributes = $this->attributes();
         $params = array_map(function ($attr) {
             return ":$attr";
@@ -33,10 +33,29 @@ abstract class DbModel extends Model
         return true;
     }
 
-    public function prepare($sql): \PDOStatement
+    public static function prepare($sql): \PDOStatement
     {
         return Application::$app->db->pdo->prepare($sql);
     }
 
+    /**
+     * @param $where
+     * @return DbModel|false|object|\stdClass|null
+     */
+    public static function findOne($where)
+    {
+        $tableName = static::tableName();
+        $attributes = array_keys($where);
+        $sql = implode("AND", array_map(function ($attr) {
+            return "$attr = :$attr";
+        }, $attributes));
 
+        $statement = self::prepare("SELECT * FROM $tableName WHERE $sql");
+        foreach ($where as $key => $item) {
+            $statement->bindValue(":$key", $item);
+        }
+        $statement->execute();
+
+        return $statement->fetchObject(static::class);
+    }
 }

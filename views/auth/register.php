@@ -1,3 +1,6 @@
+<?php
+/** @var $model \app\models\User */
+?>
 <div class="position-relative overflow-hidden radial-gradient min-vh-100 d-flex align-items-center justify-content-center">
     <div class="d-flex align-items-center justify-content-center w-100">
         <div class="row justify-content-center w-100">

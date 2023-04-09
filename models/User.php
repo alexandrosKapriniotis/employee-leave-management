@@ -17,7 +17,7 @@ class User extends DbModel
      * Declare the database table for the model
      * @return string
      */
-    public function tableName(): string
+    public static function tableName(): string
     {
         return 'users';
     }
