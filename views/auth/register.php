@@ -7,14 +7,15 @@
                         <?php $form = app\core\form\Form::begin('', "post"); ?>
                         <div class="row">
                             <div class="col">
-                                <?= $form->field($model, 'firstName'); ?>
+                                <?= $form->field($model, 'first_name'); ?>
                             </div>
                             <div class="col">
-                                <?= $form->field($model, 'lastName'); ?>
+                                <?= $form->field($model, 'last_name'); ?>
                             </div>
                         </div>
                         <?php
                             echo $form->field($model, 'email')->emailField();
+                            echo $form->selectField($model, 'user_type',['employee','admin']);
                             echo $form->field($model, 'password')->passwordField();
                             echo $form->field($model, 'confirmPassword')->passwordField();
                         ?>

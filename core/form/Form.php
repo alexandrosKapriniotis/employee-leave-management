@@ -4,7 +4,13 @@ namespace app\core\form;
 
 class Form
 {
-    public static function begin($action, $method, $options = []): Form
+    /**
+     * @param string $action
+     * @param string $method
+     * @param array $options
+     * @return Form
+     */
+    public static function begin(string $action, string $method, array $options = []): Form
     {
         $attributes = [];
         foreach ($options as $key => $value) {
@@ -14,13 +20,32 @@ class Form
         return new Form();
     }
 
+    /**
+     * @return void
+     */
     public static function end()
     {
         echo '</form>';
     }
 
+    /**
+     * @param $model
+     * @param $attribute
+     * @return Field
+     */
     public function field($model, $attribute): Field
     {
         return new Field($model, $attribute);
+    }
+
+    /**
+     * @param $model
+     * @param $attribute
+     * @param $options
+     * @return SelectField
+     */
+    public function selectField($model, $attribute, $options): SelectField
+    {
+        return new SelectField($model, $attribute, $options);
     }
 }

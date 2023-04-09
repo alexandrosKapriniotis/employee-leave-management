@@ -2,16 +2,12 @@
 
 namespace app\core\form;
 
-class Field
+class Field extends BaseField
 {
     const TYPE_TEXT = 'text';
     const TYPE_PASSWORD = 'password';
     const TYPE_EMAIL = 'email';
-    const TYPE_NUMBER = 'email';
 
-    public $type;
-    public $model;
-    public $attribute;
 
     /**
      * @param $model
@@ -20,27 +16,16 @@ class Field
     public function __construct($model, $attribute)
     {
         $this->type = self::TYPE_TEXT;
-        $this->model = $model;
-        $this->attribute = $attribute;
+        parent::__construct($model, $attribute);
     }
 
-    public function __toString()
+    public function renderInput(): string
     {
-        return sprintf('
-            <div class="form-group mb-4">
-                <label class="mb-2">%s</label>
-                <input type="%s" name="%s" value="%s" class="form-control%s">
-                <div class="invalid-feedback">
-                    %s
-                </div>
-            </div>
-        ',
-            $this->attribute,
+        return sprintf('<input type="%s" class="form-control%s" name="%s" value="%s">',
             $this->type,
-            $this->attribute,
-            $this->model->{$this->attribute},
             $this->model->hasError($this->attribute) ? ' is-invalid' : '',
-            $this->model->getFirstError($this->attribute)
+            $this->attribute,
+            $this->model->{$this->attribute}
         );
     }
 
