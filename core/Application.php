@@ -5,15 +5,17 @@ class Application
 {
 
     public static $ROOT_DIR;
+    public $layout = 'main';
     public $router;
     public $request;
     public $response;
     public static $app;
-    public $controller;
+    public $controller = null;
     public $session;
     public $db;
     public $userClass;
     public $user;
+    public $view;
 
     public function __construct($rootPath,array $config)
     {
@@ -26,6 +28,7 @@ class Application
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
         $this->db = new Database($config['db']);
+        $this->view = new View();
 
         $userId = Application::$app->session->get('user');
         if ($userId) {
@@ -34,9 +37,23 @@ class Application
         }
     }
 
+    /**
+     * @return bool
+     */
+    public static function isGuest(): bool
+    {
+        return !self::$app->user;
+    }
+
     public function run()
     {
-        echo $this->router->resolve();
+        try {
+            echo $this->router->resolve();
+        } catch (\Exception $e) {
+            echo $this->router->renderViewOnly('_error', [
+                'exception' => $e
+            ]);
+        }
     }
 
     /**
@@ -71,10 +88,9 @@ class Application
     }
 
     /**
-     * @param $user
      * @return void
      */
-    public function logout($user)
+    public function logout()
     {
         $this->user = null;
         $this->session->remove('user');

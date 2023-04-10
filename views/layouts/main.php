@@ -7,8 +7,7 @@ use app\core\Application;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Modernize Free</title>
-<!--    <link rel="shortcut icon" type="image/png" href="../assets/images/logos/favicon.png" />-->
+    <title><?php echo $this->title ?></title>
     <link rel="stylesheet" href="../../css/styles.min.css" />
 </head>
 
@@ -25,16 +24,28 @@ use app\core\Application;
                 <ul id="sidebarnav">
                     <li class="nav-small-cap">
                         <i class="ti ti-dots nav-small-cap-icon fs-4"></i>
-                        <span class="hide-menu">Home</span>
+                        <span class="hide-menu"></span>
                     </li>
-                    <li class="sidebar-item">
-                        <a class="sidebar-link" href="./index.html" aria-expanded="false">
+                    <?php if (Application::$app->user->getUserType() === 'admin') { ?>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/users" aria-expanded="false">
                             <span>
                               <i class="ti ti-layout-dashboard"></i>
                             </span>
-                            <span class="hide-menu">Dashboard</span>
-                        </a>
-                    </li>
+                                <span class="hide-menu">Users</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                    <?php if (Application::$app->user->getUserType() === 'employee') { ?>
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="/applications" aria-expanded="false">
+                            <span>
+                              <i class="ti ti-layout-dashboard"></i>
+                            </span>
+                                <span class="hide-menu">Applications</span>
+                            </a>
+                        </li>
+                    <?php } ?>
                 </ul>
             </nav>
             <!-- End Sidebar navigation -->
@@ -78,9 +89,9 @@ use app\core\Application;
         <!--  Content Start -->
         <div class="container">
             <?php if (Application::$app->session->getFlash('success')): ?>
-            <div class="alert alert-success">
-                <?php echo Application::$app->session->getFlash('success'); ?>
-            </div>
+                <div class="alert alert-success">
+                    <?php echo Application::$app->session->getFlash('success'); ?>
+                </div>
             <?php endif; ?>
             {{content}}
         </div>

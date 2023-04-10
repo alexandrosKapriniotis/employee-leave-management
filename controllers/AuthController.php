@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
 use app\models\LoginForm;
@@ -53,5 +54,11 @@ class AuthController extends Controller
         return $this->render('auth/register', [
             'model' => $user
         ]);
+    }
+
+    public function logout(Request $request, Response $response)
+    {
+        Application::$app->logout();
+        $response->redirect('/');
     }
 }

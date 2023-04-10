@@ -1,6 +1,8 @@
 <?php
 namespace app\core;
 
+use app\core\exception\NotFoundException;
+
 class Router
 {
     public $request;
@@ -27,6 +29,9 @@ class Router
         $this->routes['post'][$path] = $callback;
     }
 
+    /**
+     * @throws NotFoundException
+     */
     public function resolve()
     {
         $path = $this->request->getPath();
@@ -35,46 +40,43 @@ class Router
 
         if ($callback === false) {
             $this->response->setStatusCode(404);
-            return $this->renderOnlyView("_404");
+            throw new NotFoundException();
         }
         if (is_string($callback)) {
             return $this->renderView($callback);
         }
         if (is_array($callback)) {
-            Application::$app->controller = new $callback[0]();
-            $callback[0] = Application::$app->controller;
+            /** @var Controller $controller */
+            $controller = new $callback[0];
+            $controller->action = $callback[1];
+            Application::$app->controller = $controller;
+
+            $middlewares = $controller->getMiddlewares();
+            foreach ($middlewares as $middleware) {
+                $middleware->execute();
+            }
+            $callback[0] = $controller;
         }
         return call_user_func($callback, $this->request, $this->response);
     }
 
-    public function renderView($view, $params = [])
+    /**
+     * @param string $view
+     * @param array $params
+     * @return array|false|string|string[]
+     */
+    public function renderView(string $view, array $params = [])
     {
-        $layoutContent = $this->layoutContent();
-        $viewContent = $this->renderOnlyView($view, $params);
-        return str_replace('{{content}}', $viewContent, $layoutContent);
+        return Application::$app->view->renderView($view, $params);
     }
 
-    public function renderContent(string $viewContent)
+    /**
+     * @param string $view
+     * @param array $params
+     * @return mixed
+     */
+    public function renderViewOnly(string $view, array $params = [])
     {
-        $layoutContent = $this->layoutContent();
-        return str_replace('{{content}}', $viewContent, $layoutContent);
-    }
-
-    protected function layoutContent()
-    {
-        $layout = Application::$app->controller->layout;
-        ob_start();
-        include_once Application::$ROOT_DIR."/views/layouts/$layout.php";
-        return ob_get_clean();
-    }
-
-    protected function renderOnlyView($view, $params = [])
-    {
-        foreach ($params as $key => $value) {
-            $$key = $value;
-        }
-        ob_start();
-        include_once Application::$ROOT_DIR."/views/$view.php";
-        return ob_get_clean();
+        return Application::$app->view->renderViewOnly($view, $params);
     }
 }
