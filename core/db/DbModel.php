@@ -1,6 +1,10 @@
 <?php
 
-namespace app\core;
+namespace app\core\db;
+
+use app\core\Application;
+use app\core\Model;
+use PDO;
 
 abstract class DbModel extends Model
 {
@@ -57,5 +61,14 @@ abstract class DbModel extends Model
         $statement->execute();
 
         return $statement->fetchObject(static::class);
+    }
+
+    public static function findAll()
+    {
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName LIMIT 20");
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }

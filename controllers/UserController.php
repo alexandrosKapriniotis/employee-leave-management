@@ -2,8 +2,11 @@
 
 namespace app\controllers;
 
+use app\core\Application;
 use app\core\Controller;
 use app\core\middlewares\AuthMiddleware;
+use app\core\Request;
+use app\models\User;
 
 class UserController extends Controller
 {
@@ -15,6 +18,34 @@ class UserController extends Controller
 
     public function index()
     {
-        return $this->render('users/index');
+        return $this->render('users/index',[
+            'users' => User::findAll()
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return array|false|string|string[]|void
+     */
+    public function store(Request $request)
+    {
+        $user = new User();
+
+        if (!$request->isPost()) {
+            Application::$app->response->redirect('/');
+        }
+
+        $user->loadData($request->getBody());
+
+        if ($user->validate() && $user->save())
+        {
+            Application::$app->session->setFlash('success', 'User registered successfully');
+            Application::$app->response->redirect('/');
+            exit;
+        }
+
+        return $this->render('users/add', [
+            'model' => $user
+        ]);
     }
 }

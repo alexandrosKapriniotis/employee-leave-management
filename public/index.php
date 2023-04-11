@@ -1,4 +1,6 @@
 <?php
+
+use app\controllers\ApplicationsController;
 use app\controllers\AuthController;
 use app\controllers\SiteController;
 use app\controllers\UserController;
@@ -24,9 +26,14 @@ $app = new Application(dirname(__DIR__), $config);
 $app->router->get('/', [SiteController::class, 'home']);
 $app->router->get('/login', [AuthController::class, 'login']);
 $app->router->post('/login', [AuthController::class, 'login']);
-$app->router->get('/register', [AuthController::class, 'register']);
-$app->router->post('/register', [AuthController::class, 'register']);
 $app->router->get('/logout', [AuthController::class, 'logout']);
+
+/* User routes */
 $app->router->get('/users', [UserController::class, 'index']);
+$app->router->post('/users/new', [UserController::class, 'store']);
+$app->router->get('/users/new', [AuthController::class, 'register']);
+
+/* Application routes */
+$app->router->get('/applications', [ApplicationsController::class, 'index']);
 
 $app->run();

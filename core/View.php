@@ -12,14 +12,21 @@ class View
         if (Application::$app->controller) {
             $layoutName = Application::$app->controller->layout;
         }
+
         $viewContent = $this->renderViewOnly($view, $params);
+
         ob_start();
         include_once Application::$ROOT_DIR."/views/layouts/$layoutName.php";
         $layoutContent = ob_get_clean();
         return str_replace('{{content}}', $viewContent, $layoutContent);
     }
 
-    public function renderViewOnly($view, $params = [])
+    /**
+     * @param string $view
+     * @param array $params
+     * @return string
+     */
+    public function renderViewOnly(string $view, array $params = []): string
     {
         foreach ($params as $key => $value) {
             $$key = $value;

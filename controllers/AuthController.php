@@ -19,7 +19,8 @@ class AuthController extends Controller
             $loginForm->loadData($request->getBody());
 
             if ($loginForm->validate() && $loginForm->login()) {
-                $response->redirect('/');
+                Application::$app->user->getUserType() === 'admin' ? $response->redirect('/users') :
+                    $response->redirect('/applications');
                 return;
             }
         }
@@ -31,27 +32,11 @@ class AuthController extends Controller
         ]);
     }
 
-    public function register($request)
+    public function register(Request $request)
     {
-        $this->setLayout('auth');
         $user = new User();
 
-        if ($request->isPost()) {
-            $user->loadData($request->getBody());
-
-            if ($user->validate() && $user->save())
-            {
-                Application::$app->session->setFlash('success', 'User registered successfully');
-                Application::$app->response->redirect('/');
-                exit;
-            }
-
-            return $this->render('auth/register', [
-                'model' => $user
-            ]);
-        }
-
-        return $this->render('auth/register', [
+        return $this->render('users/add', [
             'model' => $user
         ]);
     }

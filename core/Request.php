@@ -4,10 +4,12 @@ namespace app\core;
 
 class Request
 {
+    private $routeParams = [];
+
     /**
      * @return false|mixed|string
      */
-    public function getPath()
+    public function getUrl()
     {
         $path = $_SERVER['REQUEST_URI'] ?? '/';
         $position = strpos($path,'?');
@@ -26,17 +28,26 @@ class Request
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
 
-    public function isGet()
+    /**
+     * @return bool
+     */
+    public function isGet(): bool
     {
         return $this->method() === 'get';
     }
 
-    public function isPost()
+    /**
+     * @return bool
+     */
+    public function isPost(): bool
     {
         return $this->method() === 'post';
     }
 
-    public function getBody()
+    /**
+     * @return array
+     */
+    public function getBody(): array
     {
         $body = [];
         if ($this->method() === 'get') {
@@ -50,5 +61,33 @@ class Request
             }
         }
         return $body;
+    }
+
+    /**
+     * @param $params
+     * @return $this
+     */
+    public function setRouteParams($params): Request
+    {
+        $this->routeParams = $params;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRouteParams(): array
+    {
+        return $this->routeParams;
+    }
+
+    /**
+     * @param $param
+     * @param $default
+     * @return mixed|null
+     */
+    public function getRouteParam($param, $default = null)
+    {
+        return $this->routeParams[$param] ?? $default;
     }
 }

@@ -22,7 +22,7 @@ class m0001_initial {
     public function down()
     {
         $db = Application::$app->db;
-        $SQL = "DROP TABLE users;";
+        $SQL = "DROP TABLE users";
 
         $db->pdo->exec($SQL);
     }

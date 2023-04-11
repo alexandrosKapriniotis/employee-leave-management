@@ -34,7 +34,7 @@ class Router
      */
     public function resolve()
     {
-        $path = $this->request->getPath();
+        $path = $this->request->getUrl();
         $method = $this->request->method();
         $callback = $this->routes[$method][$path] ?? false;
 
@@ -57,6 +57,7 @@ class Router
             }
             $callback[0] = $controller;
         }
+
         return call_user_func($callback, $this->request, $this->response);
     }
 
