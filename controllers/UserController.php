@@ -48,4 +48,12 @@ class UserController extends Controller
             'model' => $user
         ]);
     }
+
+    public function edit(Request $request) {
+        $user = User::findOne(['id' => $request->getRouteParam('id')]);
+
+        return $this->render('users/edit', [
+            'model' => $user
+        ]);
+    }
 }

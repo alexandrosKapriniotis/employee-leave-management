@@ -28,7 +28,7 @@ class LoginForm extends Model
             $this->addError('email', 'User not found');
             return false;
         }
-        if (!password_verify($this->password, $user->getPassword())) {
+        if (!password_verify($this->password, $user->password)) {
             $this->addError('password', 'Password is incorrect');
             return false;
         }

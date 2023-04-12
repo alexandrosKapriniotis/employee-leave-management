@@ -12,7 +12,7 @@ class m0001_initial {
                 first_name VARCHAR(255) NOT NULL,
                 last_name VARCHAR(255) NOT NULL,
                 password VARCHAR(255) NOT NULL,
-                user_type ENUM('employee', 'admin') DEFAULT employee,
+                user_type ENUM('employee', 'admin') DEFAULT 'employee',
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
 

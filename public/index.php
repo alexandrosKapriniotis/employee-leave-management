@@ -32,6 +32,8 @@ $app->router->get('/logout', [AuthController::class, 'logout']);
 $app->router->get('/users', [UserController::class, 'index']);
 $app->router->post('/users/new', [UserController::class, 'store']);
 $app->router->get('/users/new', [AuthController::class, 'register']);
+$app->router->get('/users/{id:\d+}/edit', [UserController::class, 'edit']);
+$app->router->post('/users/{id:\d+}/delete', [UserController::class, 'delete']);
 
 /* Application routes */
 $app->router->get('/applications', [ApplicationsController::class, 'index']);

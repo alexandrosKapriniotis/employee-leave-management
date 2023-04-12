@@ -23,7 +23,7 @@ class Request
     /**
      * @return mixed
      */
-    public function method()
+    public function getMethod()
     {
         return strtolower($_SERVER['REQUEST_METHOD']);
     }
@@ -33,7 +33,7 @@ class Request
      */
     public function isGet(): bool
     {
-        return $this->method() === 'get';
+        return $this->getMethod() === 'get';
     }
 
     /**
@@ -41,7 +41,7 @@ class Request
      */
     public function isPost(): bool
     {
-        return $this->method() === 'post';
+        return $this->getMethod() === 'post';
     }
 
     /**
@@ -50,12 +50,12 @@ class Request
     public function getBody(): array
     {
         $body = [];
-        if ($this->method() === 'get') {
+        if ($this->getMethod() === 'get') {
             foreach ($_GET as $key => $value) {
                 $body[$key] = filter_input(INPUT_GET, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }
         }
-        if ($this->method() === 'post') {
+        if ($this->getMethod() === 'post') {
             foreach ($_POST as $key => $value) {
                 $body[$key] = filter_input(INPUT_POST, $key, FILTER_SANITIZE_SPECIAL_CHARS);
             }

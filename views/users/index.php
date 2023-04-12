@@ -12,7 +12,7 @@
                     <a href="/users/new" class="btn btn-success">
                         <span>Add New Employee</span>
                     </a>
-                    <a href="#deleteEmployeeModal" class="btn btn-danger" data-toggle="modal">
+                    <a href="/users" class="btn btn-danger" data-toggle="modal">
                         <span>Delete</span>
                     </a>
                 </div>
@@ -21,12 +21,6 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>
-                        <span class="custom-checkbox">
-                            <input type="checkbox" id="selectAll">
-                            <label for="selectAll"></label>
-                        </span>
-                    </th>
                     <th>First Name</th>
                     <th>Last Name</th>
                     <th>Email</th>
@@ -37,12 +31,6 @@
             <tbody>
                 <?php foreach($users as $user) { ?>
                     <tr>
-                        <td>
-                            <span class="custom-checkbox">
-                                <input type="checkbox" id="checkbox<?= $user['id'] ?>" name="options[]" value="<?= $user['id'] ?>">
-                                <label for="checkbox<?= $user['id'] ?>"></label>
-                            </span>
-                        </td>
                         <td>
                             <?= $user['first_name'] ?>
                         </td>
@@ -56,10 +44,10 @@
                             <?= $user['user_type'] ?>
                         </td>
                         <td>
-                            <a href="#editEmployeeModal" class="edit" data-toggle="modal">
+                            <a href="/users/<?= $user['id'] ?>/edit" class="edit" data-toggle="modal">
                                 <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Edit"></i>
                             </a>
-                            <a href="#deleteEmployeeModal" class="delete" data-toggle="modal">
+                            <a href="/users/<?= $user['id'] ?>/delete" class="delete" data-toggle="modal">
                                 <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Delete"></i>
                             </a>
                         </td>

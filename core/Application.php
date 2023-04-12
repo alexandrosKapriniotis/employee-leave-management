@@ -53,7 +53,7 @@ class Application
         try {
             echo $this->router->resolve();
         } catch (\Exception $e) {
-            echo $this->router->renderViewOnly('_error', [
+            echo $this->router->renderView('_error', [
                 'exception' => $e
             ]);
         }

@@ -9,9 +9,9 @@ class User extends UserModel
     public $first_name = '';
     public $last_name = '';
     public $email = '';
-    protected $user_type = 'employee';
-    private $password = '';
-    private $confirmPassword = '';
+    public $user_type = 'employee';
+    public $password = '';
+    public $confirmPassword = '';
 
     /**
      * Declare the database table for the model
@@ -80,21 +80,5 @@ class User extends UserModel
     public function getUserType(): string
     {
         return $this->user_type;
-    }
-
-    /**
-     * @return string
-     */
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
-    /**
-     * @return string
-     */
-    public function getConfirmPassword(): string
-    {
-        return $this->confirmPassword;
     }
 }
