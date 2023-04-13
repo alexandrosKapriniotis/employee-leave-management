@@ -2,6 +2,8 @@
 
 namespace app\core\form;
 
+use app\core\db\DbModel;
+
 class Form
 {
     /**
@@ -30,12 +32,13 @@ class Form
 
     /**
      * @param $model
-     * @param $attribute
+     * @param string $attribute
+     * @param string $value
      * @return Field
      */
-    public function field($model, $attribute): Field
+    public function field($model,string $attribute, string $value = ''): Field
     {
-        return new Field($model, $attribute);
+        return new Field($model, $attribute, $value);
     }
 
     /**
@@ -47,5 +50,15 @@ class Form
     public function selectField($model, $attribute, $options): SelectField
     {
         return new SelectField($model, $attribute, $options);
+    }
+
+    /**
+     * @param $model
+     * @param $attribute
+     * @return TextAreaField
+     */
+    public function textAreaField($model, $attribute): TextAreaField
+    {
+        return new TextAreaField($model, $attribute);
     }
 }

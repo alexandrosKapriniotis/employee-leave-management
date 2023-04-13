@@ -9,9 +9,9 @@ class User extends UserModel
     public $first_name = '';
     public $last_name = '';
     public $email = '';
-    public $user_type = 'employee';
-    public $password = '';
-    public $confirmPassword = '';
+    private $user_type = 'employee';
+    private $password = '';
+    private $confirmPassword = '';
 
     /**
      * Declare the database table for the model
@@ -23,12 +23,13 @@ class User extends UserModel
     }
 
     /**
+     * @param array $model
      * @return bool
      */
-    public function save(): bool
+    public function save(array $model): bool
     {
-        $this->password = password_hash($this->password, PASSWORD_DEFAULT);
-        return parent::save();
+        $this->setPassword(password_hash($this->password, PASSWORD_DEFAULT));
+        return parent::save($model);
     }
 
     public function rules(): array
@@ -80,5 +81,45 @@ class User extends UserModel
     public function getUserType(): string
     {
         return $this->user_type;
+    }
+
+    /**
+     * @param string $user_type
+     */
+    public function setUserType(string $user_type)
+    {
+        $this->user_type = $user_type;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @param string $password
+     */
+    public function setPassword(string $password)
+    {
+        $this->password = $password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getConfirmPassword(): string
+    {
+        return $this->confirmPassword;
+    }
+
+    /**
+     * @param string $confirmPassword
+     */
+    public function setConfirmPassword(string $confirmPassword)
+    {
+        $this->confirmPassword = $confirmPassword;
     }
 }

@@ -23,31 +23,22 @@
                 <th>Dates Requested</th>
                 <th>Days requested</th>
                 <th>Status</th>
-                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
             <?php foreach($applications as $application) { ?>
                 <tr>
                     <td>
-                        <?= $application['created_at'] ?>
+                        <?= date("d/m/Y", strtotime($application['created_at'])) ?>
                     </td>
                     <td>
-                        <?php echo $application['date_from']."-".$application['date_to'] ?>
+                        <?php echo date("d/m/Y", strtotime($application['date_from']))."-".date("d/m/Y", strtotime($application['date_to'])) ?>
                     </td>
                     <td>
-
+                        <?php echo \app\models\Application::getDaysRequested($application['date_from'], $application['date_to']) ?>
                     </td>
                     <td>
                         <?= $application['status'] ?>
-                    </td>
-                    <td>
-                        <a href="/applications/<?= $application['id']?>" class="edit">
-                            <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Edit"></i>
-                        </a>
-                        <a href="/applications/delete/<?= $application['id']?>" class="delete">
-                            <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Delete"></i>
-                        </a>
                     </td>
                 </tr>
             <?php } ?>

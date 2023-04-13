@@ -12,9 +12,6 @@
                     <a href="/users/new" class="btn btn-success">
                         <span>Add New Employee</span>
                     </a>
-                    <a href="/users" class="btn btn-danger" data-toggle="modal">
-                        <span>Delete</span>
-                    </a>
                 </div>
             </div>
         </div>
@@ -43,13 +40,18 @@
                         <td>
                             <?= $user['user_type'] ?>
                         </td>
-                        <td>
-                            <a href="/users/<?= $user['id'] ?>/edit" class="edit" data-toggle="modal">
+                        <td class="d-flex align-items-center">
+                            <a class="show" href="/users/<?= $user['id'] ?>">
+                                <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Show">
+                                    visibility
+                                </i>
+                            </a>
+                            <a href="/users/<?= $user['id'] ?>/edit" class="edit">
                                 <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Edit"></i>
                             </a>
-                            <a href="/users/<?= $user['id'] ?>/delete" class="delete" data-toggle="modal">
+                            <button data-id="<?= $user['id'] ?>" data-bs-target="#deleteUserModal" data-bs-toggle="modal" class="btn delete delete-btn">
                                 <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Delete"></i>
-                            </a>
+                            </button>
                         </td>
                     </tr>
                 <?php } ?>
@@ -57,3 +59,7 @@
         </table>
     </div>
 </div>
+
+<?php include_once __DIR__."/../modals/delete_user.php"?>
+
+

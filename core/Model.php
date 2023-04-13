@@ -21,7 +21,9 @@ abstract class Model
     {
         foreach ($data as $key => $value) {
             if (property_exists($this, $key)) {
-                $this->{$key} = $value;
+                if(array_key_exists($key,get_object_vars($this))){
+                    $this->{$key} = $value;
+                }
             }
         }
     }
@@ -49,31 +51,34 @@ abstract class Model
     abstract public function rules();
 
     /**
+     * @param array $requestBody
      * @return bool
      */
-    public function validate(): bool
+    public function validate(array $requestBody): bool
     {
         foreach ($this->rules() as $attribute => $rules) {
-            $value = $this->{$attribute};
+            $attributeValue = $requestBody[$attribute];
 
             foreach ($rules as $rule) {
+
+
                 $ruleName = $rule;
                 if (!is_string($ruleName)) {
                     $ruleName = $rule[0];
                 }
-                if ($ruleName === self::RULE_REQUIRED && !$value) {
+                if ($ruleName === self::RULE_REQUIRED && !$attributeValue) {
                     $this->addErrorForRule($attribute, self::RULE_REQUIRED);
                 }
-                if ($ruleName === self::RULE_EMAIL && !filter_var($value, FILTER_VALIDATE_EMAIL)) {
+                if ($ruleName === self::RULE_EMAIL && !filter_var($attributeValue, FILTER_VALIDATE_EMAIL)) {
                     $this->addErrorForRule($attribute, self::RULE_EMAIL);
                 }
-                if ($ruleName === self::RULE_MIN && strlen($value) < $rule['min']) {
+                if ($ruleName === self::RULE_MIN && strlen($attributeValue) < $rule['min']) {
                     $this->addErrorForRule($attribute, self::RULE_MIN, $rule);
                 }
-                if ($ruleName === self::RULE_MAX && strlen($value) > $rule['max']) {
+                if ($ruleName === self::RULE_MAX && strlen($attributeValue) > $rule['max']) {
                     $this->addErrorForRule($attribute, self::RULE_MAX, $rule);
                 }
-                if ($ruleName === self::RULE_MATCH && $value !== $this->{$rule['match']}) {
+                if ($ruleName === self::RULE_MATCH && $attributeValue !== $requestBody[$rule['match']]) {
                     $rule['match'] = $this->getLabel($rule['match']);
                     $this->addErrorForRule($attribute, self::RULE_MATCH, $rule);
                 }
@@ -83,7 +88,7 @@ abstract class Model
                     $tableName = $className::tableName();
                     $db = Application::$app->db;
                     $statement = $db->prepare("SELECT * FROM $tableName WHERE $uniqueAttribute = :$uniqueAttribute");
-                    $statement->bindValue(":$uniqueAttribute", $value);
+                    $statement->bindValue(":$uniqueAttribute", $attributeValue);
                     $statement->execute();
                     $record = $statement->fetchObject();
                     if ($record) {

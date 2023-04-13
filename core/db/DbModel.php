@@ -17,9 +17,10 @@ abstract class DbModel extends Model
     abstract public function attributes(): array;
 
     /**
+     * @param array $model
      * @return bool
      */
-    public function save(): bool
+    public function save(array $model): bool
     {
         $tableName  = static::tableName();
         $attributes = $this->attributes();
@@ -30,8 +31,22 @@ abstract class DbModel extends Model
         $statement = self::prepare("INSERT INTO $tableName (" . implode(",", $attributes) . ") 
                 VALUES (" . implode(",", $params) . ")");
         foreach ($attributes as $attribute) {
-            $statement->bindValue(":$attribute", $this->{$attribute});
+            $statement->bindValue(":$attribute", $model[$attribute]);
         }
+        $statement->execute();
+
+        return true;
+    }
+
+    /**
+     * @param int $primaryKey
+     * @return bool
+     */
+    public static function delete(int $primaryKey): bool
+    {
+        $tableName  = static::tableName();
+        $statement  = self::prepare("DELETE FROM $tableName WHERE ".self::primaryKey()." = :primary_key");
+        $statement->bindValue('primary_key', $primaryKey);
         $statement->execute();
 
         return true;

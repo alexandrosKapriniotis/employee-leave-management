@@ -84,7 +84,13 @@ table.table td a.edit {
     color: #FFC107;
 }
 
-table.table td a.delete {
+table.table td button.delete {
+    color: #F44336;
+    padding: 0;
+}
+
+table.table td button.delete:active {
+    border: none;
     color: #F44336;
 }
 
@@ -92,4 +98,23 @@ table.table td a.delete {
     color: #fff;
     background-color: #ac2925;
     border-color: #761c19;
+}
+
+.showUser h4 {
+    font-size: 16px;
+}
+
+input.btn.btn-danger {
+    color: #fff;
+    background-color: #F44336;
+    opacity: 1;
+}
+
+.modal-header {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+thead, td {
+    text-align: center;
 }

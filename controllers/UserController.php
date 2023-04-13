@@ -32,15 +32,17 @@ class UserController extends Controller
         $user = new User();
 
         if (!$request->isPost()) {
-            Application::$app->response->redirect('/');
+            Application::$app->response->redirect('/users');
         }
 
         $user->loadData($request->getBody());
+        $user->setUserType($request->getBody()['user_type']);
+        $user->setPassword($request->getBody()['password']);
 
-        if ($user->validate() && $user->save())
+        if ($user->validate($request->getBody()) && $user->save($request->getBody()))
         {
             Application::$app->session->setFlash('success', 'User registered successfully');
-            Application::$app->response->redirect('/');
+            Application::$app->response->redirect('/users');
             exit;
         }
 
@@ -53,6 +55,28 @@ class UserController extends Controller
         $user = User::findOne(['id' => $request->getRouteParam('id')]);
 
         return $this->render('users/edit', [
+            'model' => $user
+        ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return bool
+     */
+    public function delete(Request $request): bool
+    {
+        if (User::delete($request->getBody()['user_id'])) {
+            Application::$app->session->setFlash('success', 'User deleted successfully');
+            Application::$app->response->redirect('/users/');
+        }
+        return false;
+    }
+
+    public function show(Request $request)
+    {
+        $user = User::findOne(['id' => $request->getRouteParam('id')]);
+
+        return $this->render('users/show', [
             'model' => $user
         ]);
     }
