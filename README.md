@@ -15,9 +15,9 @@ The portal requires for an authorisation keeping the registration hidden and man
 
 #### Portal login
 
-```http
+`
   GET /login/
-```
+`
 
 | Parameter | Type     | Description                |
 | :-------- | :------- | :------------------------- |
@@ -26,27 +26,27 @@ The portal requires for an authorisation keeping the registration hidden and man
 
 #### Logout
 
-```http
+`
   GET /logout
-```
+`
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 |     |  | |
 
 #### User Index (protected route : requires user type admin)
-```http
+`
   GET /users
-```
+`
 #### User creation page (protected route : requires user type admin)
-```http
+`
   GET /users/new
-```
+`
 
 #### User creation endpoint (protected route : requires user type admin)
-```http
+`
   POST /users/new
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `first_name`   | `string` | **Required**. User first name |
@@ -57,41 +57,41 @@ The portal requires for an authorisation keeping the registration hidden and man
 | `confirmPassword` | `string` | **Required**. Confirm your user password (must match the password above) |
 
 #### Get user information page (protected route : requires user type admin)
-```http
+`
   GET /users/{id:\d+}
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `integer` | **Required**. User id |
 
 #### Get user edit page (protected route : requires user type admin)
-```http
+`
   GET /users/{id:\d+}/edit
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `integer` | **Required**. User id |
 
 #### Delete user (protected route : requires user type admin)
-```http
+`
   POST /users/{id:\d+}/delete
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `integer` | **Required**. User id |
 
 #### Application Index 
-```http
+`
   GET /applications
-```
+`
 #### Application creation page
-```http
+`
   GET /applications/new
-```
+`
 #### Application creation endpoint
-```http
+`
   POST /applications/new
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `date_from`   | `date` | **Required**. Vacation start |
@@ -99,17 +99,17 @@ The portal requires for an authorisation keeping the registration hidden and man
 | `reason`       | `string` | **Required**. Vacation reason |
 
 #### Approve application (protected route : requires user type admin)
-```http
+`
   POST /applications/{id:\d+}/status/{status:approved}
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `integer` | **Required**. Application id |
 
 #### Reject application (protected route : requires user type admin)
-```http
+`
   POST /applications/{id:\d+}/status/{status:rejected}
-```
+`
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `id`      | `integer` | **Required**. Application id |
