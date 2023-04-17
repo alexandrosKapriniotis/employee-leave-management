@@ -4,6 +4,7 @@ namespace app\models;
 
 use app\core\Application as coreApplication;
 use app\core\db\DbModel;
+use app\core\exception\ForbiddenException;
 
 class Application extends DbModel
 {
@@ -153,9 +154,14 @@ class Application extends DbModel
      * @param int $id
      * @param string $status
      * @return void
+     * @throws ForbiddenException
      */
     public static function updateStatus(int $id, string $status)
     {
+        if (coreApplication::$app->user->getUserType() !== "admin") {
+            throw new ForbiddenException();
+        }
+
         $application = self::findById($id);
 
         if ($application) {
