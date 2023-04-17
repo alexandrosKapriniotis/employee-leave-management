@@ -2,7 +2,7 @@
 /** @var $model \app\models\User */
 ?>
 <div class="p-4 md:py-8 md:px-12 lg:ml-60 space-y-8">
-    <div class="position-relative addUser">
+    <div class="position-relative" id="editUserTable">
         <h3>Add User</h3>
         <?php $form = app\core\form\Form::begin('/users/new', "post"); ?>
         <div class="row">
@@ -15,7 +15,7 @@
         </div>
         <?php
         echo $form->field($model, 'email', $model->email)->emailField();
-        echo $form->field($model, 'user_type', $model->getUserType())->readOnly();
+        echo $form->selectField($model, 'user_type', ['employee', 'admin'], $model->getUserType());
         ?>
         <div class="d-flex justify-content-end align-items-baseline mt-4">
             <a href="/users" class="text-dark me-2">Cancel</a>

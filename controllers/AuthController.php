@@ -3,6 +3,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\middlewares\AdminMiddleware;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\core\Response;
@@ -11,21 +12,27 @@ use app\models\User;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->registerMiddleware(new AuthMiddleware(['register']));
+        $this->registerMiddleware(new AdminMiddleware(['store','register']));
+    }
+
     public function login(Request $request, Response $response)
     {
         $loginForm = new LoginForm();
+        $this->setLayout('auth');
 
         if ($request->isPost()) {
             $loginForm->loadData($request->getBody());
 
             if ($loginForm->validate($request->getBody()) && $loginForm->login()) {
-                Application::$app->user->getUserType() === 'admin' ? $response->redirect('/users') :
-                    $response->redirect('/applications');
+                $redirectUrl = Application::$app->getLoginRedirect();
+
+                $response->redirect($redirectUrl);
                 return;
             }
         }
-
-        $this->setLayout('auth');
 
         return $this->render('auth/login', [
             'model' => $loginForm
@@ -44,6 +51,6 @@ class AuthController extends Controller
     public function logout(Request $request, Response $response)
     {
         Application::$app->logout();
-        $response->redirect('/');
+        $response->redirect('/login');
     }
 }

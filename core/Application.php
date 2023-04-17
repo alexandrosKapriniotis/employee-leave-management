@@ -3,10 +3,10 @@ namespace app\core;
 
 use app\core\db\Database;
 use app\core\db\DbModel;
+use Postmark\PostmarkClient;
 
 class Application
 {
-
     public static $ROOT_DIR;
     public $layout = 'main';
     public $router;
@@ -16,11 +16,17 @@ class Application
     public $controller = null;
     public $session;
     public $db;
+    public $emailFrom;
+    public $appUrl;
     public $userClass;
     public $user;
     public $view;
 
-    public function __construct($rootPath,array $config)
+    /**
+     * @param $rootPath
+     * @param array $config
+     */
+    public function __construct($rootPath, array $config)
     {
         $this->user = null;
         $this->userClass = $config['userClass'];
@@ -31,6 +37,8 @@ class Application
         $this->session = new Session();
         $this->router = new Router($this->request, $this->response);
         $this->db = new Database($config['db']);
+        $this->emailFrom   = $config['email']['from'];
+        $this->appUrl      = $config['appUrl'];
         $this->view = new View();
 
         $userId = Application::$app->session->get('user');
@@ -48,6 +56,9 @@ class Application
         return !self::$app->user;
     }
 
+    /**
+     * @return void
+     */
     public function run()
     {
         try {
@@ -97,5 +108,22 @@ class Application
     {
         $this->user = null;
         $this->session->remove('user');
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getLoginRedirect()
+    {
+        $requestBody = $this->request->getBody();
+
+        if (isset($requestBody['redirect'])) {
+            $loginRedirect = $requestBody['redirect'];
+        } else {
+            $this->user->getUserType() === 'admin' ? $loginRedirect = '/users'
+                : $loginRedirect = '/applications';
+        }
+
+        return $loginRedirect;
     }
 }

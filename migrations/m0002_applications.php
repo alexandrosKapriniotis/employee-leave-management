@@ -12,10 +12,10 @@ class m0002_applications {
                 date_to DATE NOT NULL,            
                 reason TEXT NOT NULL,
                 status ENUM('pending', 'approved', 'rejected') DEFAULT 'pending',
-                user_id int(10) unsigned NOT NULL,,
-                KEY `FK_applications_applications` (`user_id`),
-  CONSTRAINT `FK_user_applications` FOREIGN KEY (`user_id`) REFERENCES `applications` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP)
+                user_id int(10) unsigned NOT NULL,
+                KEY `FK_users_applications` (`user_id`),
+                CONSTRAINT `FK_user_applications` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )";
 
         $db->pdo->exec($SQL);

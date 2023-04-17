@@ -2,6 +2,7 @@
 
 namespace app\models;
 
+use app\core\Application as coreApplication;
 use app\core\db\DbModel;
 
 class Application extends DbModel
@@ -143,8 +144,35 @@ class Application extends DbModel
     {
         $from_date = strtotime($date_from);
         $to_date = strtotime($date_to);
-        $datediff = $to_date - $from_date;
+        $dateDiff = $to_date - $from_date;
 
-        return round($datediff / (60 * 60 * 24));
+        return round($dateDiff / (60 * 60 * 24));
+    }
+
+    /**
+     * @param int $id
+     * @param string $status
+     * @return void
+     */
+    public static function updateStatus(int $id, string $status)
+    {
+        $application = self::findById($id);
+
+        if ($application) {
+            $application->update(['id' => $id], ['status' => $status]);
+            $timestamp = strtotime($application->created_at);
+
+            User::notifyUser($application->getUserId(), [
+                'subject' => 'Your application has been '.$status,
+                'application_status' => $status,
+                'submission_date'   => date('d/m/Y', $timestamp)
+            ]);
+            coreApplication::$app->session->setFlash('success', 'Application '.$status.' successfully');
+        } else {
+            coreApplication::$app->session->setFlash('failure', 'There was a problem update the application status');
+        }
+
+        coreApplication::$app->response->redirect('/users');
+        return;
     }
 }

@@ -18,9 +18,9 @@ abstract class DbModel extends Model
 
     /**
      * @param array $model
-     * @return bool
+     * @return DbModel|false|object|\stdClass|null
      */
-    public function save(array $model): bool
+    public function save(array $model)
     {
         $tableName  = static::tableName();
         $attributes = $this->attributes();
@@ -35,7 +35,51 @@ abstract class DbModel extends Model
         }
         $statement->execute();
 
-        return true;
+        return self::findById(Application::$app->db->pdo->lastInsertId());
+    }
+
+    /**
+     * @param array $where
+     * @param array $update
+     * @return bool
+     */
+    public function update(array $where, array $update): bool
+    {
+        $tableName  = static::tableName();
+        $whereSql   = self::prepareStatementAttributes($where);
+        $setSql = self::prepareStatementAttributes($update);
+
+        $statement = self::prepare("UPDATE $tableName SET $setSql WHERE $whereSql");
+        foreach (array_merge($update, $where) as $key => $item) {
+            $statement->bindValue(":$key", $item);
+        }
+
+        return $statement->execute();
+    }
+
+    /**
+     * @param array $attributes
+     * @return string
+     */
+    public function prepareStatementAttributes(array $attributes): string
+    {
+        $attributeKeys = array_keys($attributes);
+
+        return implode(" AND ", array_map(function ($attr) {
+            return "$attr = :$attr";
+        }, $attributeKeys));
+    }
+
+    /**
+     * @param $id
+     * @param array $update
+     * @return bool
+     */
+    public static function findByIdAndUpdate($id, array $update): bool
+    {
+        $model = self::findById($id);
+
+        return $model->update(['id' => $id], $update);
     }
 
     /**
@@ -78,6 +122,50 @@ abstract class DbModel extends Model
         return $statement->fetchObject(static::class);
     }
 
+    /**
+     * @param $id
+     * @return DbModel|false|object|\stdClass|null
+     */
+    public static function findById($id)
+    {
+        $tableName = static::tableName();
+        $statement = self::prepare("SELECT * FROM $tableName WHERE id = :id");
+        $statement->bindValue(":id", $id);
+        $statement->execute();
+
+        return $statement->fetchObject(static::class);
+    }
+
+    /**
+     * @param array $where
+     * @param string $select
+     * @param int $order
+     * @param string $direction
+     * @return array|false
+     */
+    public static function findMany(array $where, string $select = '*', int $order = 1, string $direction = 'ASC')
+    {
+        $tableName = static::tableName();
+
+        $attributes = array_keys($where);
+        $sql = implode("AND", array_map(function ($attr) {
+            return "$attr = :$attr";
+        }, $attributes));
+
+        $order = " ORDER BY :order ";
+        $order .= ($direction === 'ASC') ? " ASC" : "DESC";
+        $statement = self::prepare("SELECT $select FROM $tableName WHERE $sql $order");
+
+        foreach ($where as $key => $item) {
+            $statement->bindValue(":$key", $item);
+        }
+        $statement->bindValue(':order', $order, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function findAll()
     {
         $tableName = static::tableName();
@@ -85,5 +173,12 @@ abstract class DbModel extends Model
         $statement->execute();
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function pluck($key, $data) {
+        return array_reduce($data, function($result, $array) use($key) {
+            isset($array[$key]) && $result[] = $array[$key];
+            return $result;
+        }, array());
     }
 }

@@ -7,17 +7,22 @@ use app\controllers\UserController;
 use app\core\Application;
 use app\models\User;
 use Dotenv\Dotenv;
+use Postmark\PostmarkClient;
 
 require_once __DIR__.'/../vendor/autoload.php';
 $dotenv = Dotenv::createImmutable(dirname(__DIR__));
 $dotenv->load();
 
 $config = [
+    'appUrl'    => $_ENV['APP_URL'],
     'userClass' => User::class,
     'db' => [
         'dsn' => $_ENV['DB_DSN'],
         'user' => $_ENV['DB_USER'],
         'password' => $_ENV['DB_PASSWORD']
+    ],
+    'email' => [
+        'from'   => $_ENV['EMAIL_FROM']
     ]
 ];
 
@@ -40,5 +45,7 @@ $app->router->post('/users/delete', [UserController::class, 'delete']);
 $app->router->get('/applications', [ApplicationsController::class, 'index']);
 $app->router->get('/applications/new', [ApplicationsController::class, 'add']);
 $app->router->post('/applications/new', [ApplicationsController::class, 'store']);
+$app->router->get('/applications/{id:\d+}/status/{status:approved}', [ApplicationsController::class, 'updateStatus']);
+$app->router->get('/applications/{id:\d+}/status/{status:rejected}', [ApplicationsController::class, 'updateStatus']);
 
 $app->run();

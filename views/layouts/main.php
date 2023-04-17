@@ -1,5 +1,9 @@
 <?php
 use app\core\Application;
+
+if (!isset(Application::$app->user)) {
+    Application::$app->response->redirect('/login');
+}
 ?>
 <!doctype html>
 <html lang="en">
@@ -7,9 +11,12 @@ use app\core\Application;
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo $this->title ?></title>
+    <title>Employee leave management system</title>
     <link rel="stylesheet" href="../../css/styles.min.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.1/dist/css/datepicker.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.1/dist/css/datepicker-bs5.min.css">
     <link rel="stylesheet" href="../../css/main.css" />
 </head>
 
@@ -28,6 +35,9 @@ use app\core\Application;
                         <h4>
                             <?php echo Application::$app->user->getDisplayName() ?>
                         </h4>
+                    </li>
+                    <li class="text-end">
+                        <a href="/logout">Logout</a>
                     </li>
                     <?php if (Application::$app->user->getUserType() === 'admin') { ?>
                         <li class="sidebar-item">
@@ -72,6 +82,9 @@ use app\core\Application;
 </div>
 <script src="../../libs/jquery/dist/jquery.min.js"></script>
 <script src="../../libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.3.1/dist/js/datepicker-full.min.js"></script>
+<script src="../../js/application.js"></script>
 <script src="../../js/main.js"></script>
 </body>
 

@@ -92,7 +92,7 @@ class Router
             $callback = $this->getCallback();
 
             if ($callback === false) {
-                throw new NotFoundException();
+                return $this->renderViewOnly('_404');
             }
         }
         if (is_string($callback)) {

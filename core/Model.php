@@ -60,8 +60,6 @@ abstract class Model
             $attributeValue = $requestBody[$attribute];
 
             foreach ($rules as $rule) {
-
-
                 $ruleName = $rule;
                 if (!is_string($ruleName)) {
                     $ruleName = $rule[0];
@@ -149,5 +147,13 @@ abstract class Model
     {
         $errors = $this->errors[$attribute] ?? [];
         return $errors[0] ?? '';
+    }
+
+    /**
+     * @param array $errors
+     */
+    public function setErrors(array $errors)
+    {
+        $this->errors = $errors;
     }
 }

@@ -43,13 +43,14 @@ class Form
 
     /**
      * @param $model
-     * @param $attribute
-     * @param $options
+     * @param string $attribute
+     * @param array $options
+     * @param string $selected
      * @return SelectField
      */
-    public function selectField($model, $attribute, $options): SelectField
+    public function selectField($model,string $attribute,array $options,string $selected = ''): SelectField
     {
-        return new SelectField($model, $attribute, $options);
+        return new SelectField($model, $attribute, $options, $selected);
     }
 
     /**

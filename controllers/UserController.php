@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application;
 use app\core\Controller;
+use app\core\middlewares\AdminMiddleware;
 use app\core\middlewares\AuthMiddleware;
 use app\core\Request;
 use app\models\User;
@@ -13,7 +14,8 @@ class UserController extends Controller
 
     public function __construct()
     {
-        $this->registerMiddleware(new AuthMiddleware(['users']));
+        $this->registerMiddleware(new AuthMiddleware());
+        $this->registerMiddleware(new AdminMiddleware());
     }
 
     public function index()
@@ -34,10 +36,6 @@ class UserController extends Controller
         if (!$request->isPost()) {
             Application::$app->response->redirect('/users');
         }
-
-        $user->loadData($request->getBody());
-        $user->setUserType($request->getBody()['user_type']);
-        $user->setPassword($request->getBody()['password']);
 
         if ($user->validate($request->getBody()) && $user->save($request->getBody()))
         {

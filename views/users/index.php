@@ -15,7 +15,7 @@
                 </div>
             </div>
         </div>
-        <table class="table table-striped table-hover">
+        <table class="table table-striped table-hover" id="userTable">
             <thead>
                 <tr>
                     <th>First Name</th>
@@ -40,7 +40,7 @@
                         <td>
                             <?= $user['user_type'] ?>
                         </td>
-                        <td class="d-flex align-items-center">
+                        <td class="d-flex justify-content-center align-items-center actions-cell">
                             <a class="show" href="/users/<?= $user['id'] ?>">
                                 <i class="material-icons" data-toggle="tooltip" title="" data-original-title="Show">
                                     visibility

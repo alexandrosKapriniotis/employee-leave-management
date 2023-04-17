@@ -10,4 +10,10 @@ $(document).ready(function(){
             $('#deleteApplicationModal').modal('show');
         }
     });
+
+    $("#userTable td").click(function (e) {
+        if (!$(e.target).hasClass('actions-cell')) {
+            window.location = $(this).parent().find('.edit').attr("href");
+        }
+    })
 });
