@@ -47,7 +47,7 @@ abstract class DbModel extends Model
     {
         $tableName  = static::tableName();
         $whereSql   = self::prepareStatementAttributes($where);
-        $setSql = self::prepareStatementAttributes($update);
+        $setSql = self::prepareUpdateStatementAttributes($update);
 
         $statement = self::prepare("UPDATE $tableName SET $setSql WHERE $whereSql");
         foreach (array_merge($update, $where) as $key => $item) {
@@ -55,6 +55,19 @@ abstract class DbModel extends Model
         }
 
         return $statement->execute();
+    }
+
+    /**
+     * @param array $attributes
+     * @return string
+     */
+    public function prepareUpdateStatementAttributes(array $attributes): string
+    {
+        $attributeKeys = array_keys($attributes);
+
+        return implode(",", array_map(function ($attr) {
+            return "$attr = :$attr";
+        }, $attributeKeys));
     }
 
     /**

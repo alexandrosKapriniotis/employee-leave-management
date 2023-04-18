@@ -59,6 +59,19 @@ class UserController extends Controller
 
     /**
      * @param Request $request
+     * @return array|false|string|string[]
+     */
+    public function update(Request $request)
+    {
+        User::findByIdAndUpdate($request->getRouteParam('id'), $request->getBody());
+
+        return $this->render('users/index', [
+            'users' => User::findAll()
+        ]);
+    }
+
+    /**
+     * @param Request $request
      * @return bool
      */
     public function delete(Request $request): bool

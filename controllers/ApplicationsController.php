@@ -4,6 +4,7 @@ namespace app\controllers;
 
 use app\core\Application as coreApplication;
 use app\core\Controller;
+use app\core\exception\ForbiddenException;
 use app\core\middlewares\AuthMiddleware;
 use app\core\middlewares\EmployeeMiddleware;
 use app\core\Request;
@@ -61,6 +62,7 @@ class ApplicationsController extends Controller
     /**
      * @param Request $request
      * @return void
+     * @throws ForbiddenException
      */
     public function updateStatus(Request $request)
     {

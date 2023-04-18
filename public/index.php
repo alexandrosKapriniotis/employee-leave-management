@@ -40,6 +40,7 @@ $app->router->get('/users/new', [AuthController::class, 'register']);
 $app->router->get('/users/{id:\d+}', [UserController::class, 'show']);
 $app->router->get('/users/{id:\d+}/edit', [UserController::class, 'edit']);
 $app->router->post('/users/delete', [UserController::class, 'delete']);
+$app->router->post('/users/{id:\d+}/update', [UserController::class, 'update']);
 
 /* Application routes */
 $app->router->get('/applications', [ApplicationsController::class, 'index']);

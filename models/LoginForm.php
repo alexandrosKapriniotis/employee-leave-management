@@ -24,10 +24,12 @@ class LoginForm extends Model
     public function login(): bool
     {
         $user = User::findOne(['email' => $this->email]);
+
         if (!$user) {
             $this->addError('email', 'User not found');
             return false;
         }
+
         if (!password_verify($this->password, $user->getPassword())) {
             $this->addError('password', 'Password is incorrect');
             return false;
